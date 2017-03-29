@@ -235,7 +235,7 @@ class DownloadAnalytics(object):
         packages = []
         log.info("There are %d results" % results['totalResults'])
         if results['totalResults'] > 0:
-            for entry in results.get('rows'):
+            for entry in results.get('rows', []):
                 (loc, pageviews, visits) = entry
                 # url = _normalize_url('http:/' + loc) # strips off domain e.g. www.data.gov.uk or data.gov.uk
                 url = loc
@@ -284,7 +284,7 @@ class DownloadAnalytics(object):
         try:
             from ga_auth import init_service
 
-            self.token, svc = init_service(ga_token_filepath, None)
+            self.token, svc = init_service(ga_token_filepath)
             log.info("OAuth token refreshed")
         except Exception, auth_exception:
             log.error("Oauth refresh failed")
@@ -293,7 +293,9 @@ class DownloadAnalytics(object):
 
         try:
             headers = {'authorization': 'Bearer ' + self.token}
-            r = requests.get("https://www.googleapis.com/analytics/v3/data/ga", params=params, headers=headers)
+            r = requests.get(
+                "https://www.googleapis.com/analytics/v3/data/ga",
+                params=params, headers=headers)
             if r.status_code != 200:
                 log.info("STATUS: %s" % (r.status_code,))
                 log.info("CONTENT: %s" % (r.content,))
@@ -518,17 +520,8 @@ class DownloadAnalytics(object):
                                 resource_id = res[0]
                                 r = q.filter(model.Resource.id == resource_id).first()
 
-<<<<<<< HEAD
-                package_name = ""
-		if r:
-                    if hasattr(r,'resource_group'):
-                        package_name = r.resource_group.package.name
-                    if hasattr(r,'package'):
-                        package_name = r.package.name
-=======
                 package_name = model.Session.query(model.Package).filter(model.Package.id == r.package_id).first().name if r else ""
                 # package_name = r.resource_group.package.name if r else ""
->>>>>>> b94479a... - Bringing into step with prod
 
                 if package_name:
                     log.info(package_name)
@@ -686,7 +679,7 @@ class DownloadAnalytics(object):
             log.exception(e)
             results = dict(url=[])
 
-        result_data = results.get('rows')
+        result_data = results.get('rows', [])
         data = {}
         if results is not None:
             for result in result_data:
@@ -697,4 +690,3 @@ class DownloadAnalytics(object):
         for result in result_data:
             data[result[1]] = data.get(result[1], 0) + int(result[2])
         ga_model.update_sitewide_stats(period_name, "Mobile devices", data, period_complete_day)
-
