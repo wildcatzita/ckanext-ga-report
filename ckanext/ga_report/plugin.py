@@ -89,4 +89,3 @@ class GAReportPlugin(p.SingletonPlugin):
             action='read_publisher'
         )
         return map
-

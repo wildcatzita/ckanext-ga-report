@@ -47,6 +47,7 @@ def single_popular_dataset(top=100):
         while not dataset:
             rand = random.randrange(0, min(top, num_top_datasets))
             ga_url = top_datasets[rand]
+            # TODO: [extract SA]
             dataset = model.Package.get(ga_url.url[len('/data/dataset/'):])
             if dataset and not dataset.state == 'active':
                 dataset = None
@@ -106,6 +107,7 @@ def _datasets_for_publisher(publisher, count):
         order_by('ga_url.pageviews::int desc').all()
     for entry in entries:
         if len(datasets) < count:
+            # TODO: [extract SA]
             p = model.Package.get(entry.url[len('/data/dataset/'):])
 
             if not p:
@@ -143,5 +145,3 @@ def month_option_title(month_iso, months, day):
     if index==0:
         return month_name + (' (up to %s)'%day)
     return month_name
-
-
