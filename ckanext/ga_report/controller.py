@@ -5,10 +5,14 @@ import json
 import logging
 import operator
 import collections
-from ckan.lib.base import (BaseController, c, g, render, request, response, abort)
+from ckan.lib.base import (BaseController, c, render, request, response, abort)
+try:
+    from ckan.lib.base import g
+except ImportError:
+    from ckan.common import g
 
 import sqlalchemy
-from sqlalchemy import func, cast, Integer
+from sqlalchemy import func, cast
 import ckan.model as model
 from ga_model import GA_Url, GA_Stat, GA_ReferralStat, GA_Publisher
 

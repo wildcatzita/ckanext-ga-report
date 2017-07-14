@@ -145,3 +145,8 @@ def month_option_title(month_iso, months, day):
     if index==0:
         return month_name + (' (up to %s)'%day)
     return month_name
+
+def join_x(graph):
+    return ','.join([x for x,y in graph])
+def join_y(graph):
+    return ','.join([y for x,y in graph])

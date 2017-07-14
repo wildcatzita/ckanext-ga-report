@@ -32,3 +32,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+credentials_.json
+credentials1_.json
